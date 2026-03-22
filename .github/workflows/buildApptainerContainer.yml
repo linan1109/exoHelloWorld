@@ -29,13 +29,15 @@ jobs:
         uses: eWaterCycle/setup-apptainer@v2
         with:
           apptainer-version: 1.3.0
+
       - name: Determine Version/Tag
         id: vars
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
+            RAW_VERSION=${GITHUB_REF#refs/tags/}
+            VERSION=${RAW_VERSION#v}
           else
-            VERSION=$(git rev-parse --short HEAD)
+            VERSION="0.0.0+$(git rev-parse --short HEAD)"
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           
