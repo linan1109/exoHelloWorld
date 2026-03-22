@@ -41,16 +41,19 @@ jobs:
           
           echo "LOWER_REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
+
       - name: Build Apptainer Container
         run: |
-          apptainer build \
-            --fakeroot \
+          sudo apptainer build \
             --build-arg VERSION=${{ env.VERSION }} \
             env.sif containers/env.def
+          
+          sudo chown $USER env.sif
 
       - name: Login to GitHub Container Registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | apptainer registry login -u ${{ github.actor }} --password-stdin oras://${{ env.REGISTRY }}
+
 
       - name: Push Container to GHCR
         run: |
