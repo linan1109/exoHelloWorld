@@ -44,6 +44,7 @@ jobs:
       - name: Build Apptainer Container
         run: |
           apptainer build \
+            --fakeroot \
             --build-arg VERSION=${{ env.VERSION }} \
             env.sif containers/env.def
 
